@@ -1,11 +1,13 @@
 <template>
-    <h1>Search</h1>
-    <input id = "searchInput" size=30 placeholder="Enter a song name, and start queuing!" v-model="query"/>&nbsp;
-    <button @click="handleSearch">Search</button>
-    <h3>Results</h3>
-    <ul>
-        <song-view v-for="result in results" :key="result.id" :song="result"/>
-    </ul>
+    <div id = "searchView">
+        <h1>Search</h1>
+        <input id = "searchInput" size=30 placeholder="Enter a song name, and start queuing!" v-model="query"/>&nbsp;
+        <button @click="handleSearch">Search</button>
+        <h1>Results</h1>
+        <div id = "resultsList">
+            <song-view v-for="result in results" :key="result.id" :song="result"/>
+        </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -37,7 +39,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
+#searchView {
+    padding: 1em 3em;
+    border-left: 0.2em lightgrey solid;
+    width: 40vw;
+}
 input {
     padding: 0.5em;
+    height: 2em;
+}
+
+#resultsList {
+    height: 90%;
+    overflow-y: auto;
 }
 </style>

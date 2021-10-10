@@ -1,14 +1,18 @@
 <template>
-    <div class = "song" @click="handleFullDivClick">
+    <div id = "songContainer" :class = "{ currentPlaying: isCurrentSong }" @click="handleFullDivClick">
+        <h2>{{ song?.queueIndex }}</h2>
         <img :src="song.thumbnail"/>
-        <span>{{ song?.queueIndex }}</span>&nbsp;
-        <span v-html="song.title"/>&nbsp;
-        <button v-show="!queued" @click="addToQueue">+</button>
-        <span v-show="queued">
-            <button @click="moveUpQueue">↑</button>
-            <button @click="moveDownQueue">↓</button>
-            <button @click="removeFromQueue">x</button>
-        </span>
+        <h2 id = "songTitle" v-html="song.title"/>&nbsp;
+        <div id = "songButtons">
+            <div v-if="!queued">
+                <button @click="addToQueue">+</button>
+            </div>
+            <div v-else>
+                <button @click="moveUpQueue">↑</button>
+                <button @click="moveDownQueue">↓</button>
+                <button @click="removeFromQueue">x</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -17,7 +21,7 @@ import { useStore } from '@/store'
 import { QUEUE, SONG } from '@/store/actions'
 import { QueuedSong, Song } from '@/types/song'
 import { SongPayload } from '@/types/store'
-import { defineComponent, PropType } from 'vue'
+import { computed, defineComponent, PropType } from 'vue'
 
 export default defineComponent({
     props: {
@@ -34,12 +38,20 @@ export default defineComponent({
 
     setup(props) {
         const store = useStore()
+        const isCurrentSong = computed(() => {
+            return (props.song as QueuedSong).queueIndex == store.state.currentSong?.queueIndex
+        })
+
 
         const handleFullDivClick = (e: Event) => {
             const target = e.target as HTMLInputElement
             if (e.stopPropagation) e.stopPropagation()
             if (target.nodeName != 'BUTTON') {
-                setAsCurrentSong()
+                if (props.queued) {
+                    setAsCurrentSong()
+                } else {
+                    addToQueue()
+                }
             }
         }
 
@@ -66,14 +78,60 @@ export default defineComponent({
         }
 
         return {
-            handleFullDivClick, addToQueue, setAsCurrentSong, moveUpQueue, moveDownQueue, removeFromQueue
+            handleFullDivClick, addToQueue, setAsCurrentSong, moveUpQueue, moveDownQueue, removeFromQueue, isCurrentSong
         }
     },
 })
 </script>
 
 <style scoped>
-.song:hover {
+#songContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0em 2em;
+    border-radius: 2em;
+    transition: background-color 0.1s;
+}
+
+#songContainer:hover {
     cursor: pointer;
+    background-color: rgb(68, 78, 78);
+}
+
+.currentPlaying {
+    background-color: green;
+}
+
+#songContainer img {
+    padding: 2em;
+    width: 15em;
+}
+
+#songTitle {
+    /* padding: 0.75em;
+    padding-left: 1.1em; */
+    width: 100%;
+}
+
+#songButtons div {
+    display: flex;
+    flex-direction: row;
+    padding-right: 1.1em;
+}
+
+#songButtons button {
+    color: white;
+    background: none;
+    border: none;
+    padding: 1.25em;
+    margin: 0.1em;
+    border-radius: 5em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#songButtons button:hover {
+    background-color: lightslategray;
 }
 </style>
