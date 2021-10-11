@@ -5,5 +5,5 @@ export interface Song {
 }
 
 export interface QueuedSong extends Song {
-    queueIndex: number
+    queueId: number
 }

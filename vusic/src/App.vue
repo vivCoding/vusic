@@ -35,7 +35,6 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    height: 65vh;
     margin: 2em 0;
 }
 </style>

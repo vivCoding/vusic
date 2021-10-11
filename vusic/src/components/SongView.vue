@@ -1,16 +1,16 @@
 <template>
     <div id = "songContainer" :class = "{ currentPlaying: isCurrentSong }" @click="handleFullDivClick">
-        <h2>{{ song?.queueIndex }}</h2>
+        <h2 id = "queueId" v-show="queued">{{ song.queueId + 1 }}</h2>
         <img :src="song.thumbnail"/>
         <h2 id = "songTitle" v-html="song.title"/>&nbsp;
         <div id = "songButtons">
             <div v-if="!queued">
-                <button @click="addToQueue">+</button>
+                <img class = "imgButton" @click="addToQueue" src = "../assets/queue-white-18dp/2x/baseline_queue_white_18dp.png"/>
             </div>
             <div v-else>
-                <button @click="moveUpQueue">↑</button>
-                <button @click="moveDownQueue">↓</button>
-                <button @click="removeFromQueue">x</button>
+                <img class = "imgButton" @click="moveUpQueue" src = "../assets/arrow_upward-white-18dp/2x/baseline_arrow_upward_white_18dp.png"/>
+                <img class = "imgButton" @click="moveDownQueue" src = "../assets/arrow_downward-white-18dp/2x/baseline_arrow_downward_white_18dp.png"/>
+                <img class = "imgButton" @click="removeFromQueue" src = "../assets/close-white-18dp/2x/baseline_close_white_18dp.png"/>
             </div>
         </div>
     </div>
@@ -39,14 +39,14 @@ export default defineComponent({
     setup(props) {
         const store = useStore()
         const isCurrentSong = computed(() => {
-            return (props.song as QueuedSong).queueIndex == store.state.currentSong?.queueIndex
+            return props.queued && (props.song as QueuedSong).queueId == store.state.currentSong?.queueId
         })
 
 
         const handleFullDivClick = (e: Event) => {
             const target = e.target as HTMLInputElement
             if (e.stopPropagation) e.stopPropagation()
-            if (target.nodeName != 'BUTTON') {
+            if (target.nodeName != 'BUTTON' && target.className != "imgButton") {
                 if (props.queued) {
                     setAsCurrentSong()
                 } else {
@@ -89,7 +89,7 @@ export default defineComponent({
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 0em 2em;
+    padding: 0em 2em 0 0;
     border-radius: 2em;
     transition: background-color 0.1s;
 }
@@ -108,6 +108,10 @@ export default defineComponent({
     width: 15em;
 }
 
+#queueId {
+    padding-left: 1em;
+}
+
 #songTitle {
     /* padding: 0.75em;
     padding-left: 1.1em; */
@@ -120,18 +124,19 @@ export default defineComponent({
     padding-right: 1.1em;
 }
 
-#songButtons button {
+#songButtons .imgButton {
     color: white;
     background: none;
     border: none;
-    padding: 1.25em;
-    margin: 0.1em;
     border-radius: 5em;
     cursor: pointer;
     transition: background-color 0.2s;
+    width: 2.5em;
+    margin: 0;
+    padding: 1.5em;
 }
 
-#songButtons button:hover {
+#songButtons .imgButton:hover {
     background-color: lightslategray;
 }
 </style>

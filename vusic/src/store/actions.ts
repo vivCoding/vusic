@@ -3,7 +3,7 @@ export enum QUEUE {
     REMOVE_SONG = 'removeSong',
     MOVE_SONG_UP = 'moveSongUp',
     MOVE_SONG_DOWN = 'moveSongDown',
-    CHANGE_SONG_POSITION = 'changeSongPosition'
+    CHANGE_SONG_POSITION = 'changeSongPosition',
 }
 
 export enum SONG {

@@ -29,8 +29,9 @@ export default defineComponent({
 
 <style scoped>
 #queueView {
-    padding: 1em 3em;
+    padding: 1em 5em;
     width: 60vw;
+    height: 65vh;
 }
 
 #queueList {

@@ -18,8 +18,16 @@
 }
 
 #logo {
-    width: 6em;
+    width: 7em;
     padding: 0 1em;
 }
 
+#title {
+    margin: 0;
+    font-weight: 1000;
+}
+
+#subtitle {
+    margin: 0
+}
 </style>
