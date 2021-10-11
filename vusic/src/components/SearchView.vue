@@ -2,7 +2,7 @@
     <div id = "searchView">
         <div id = "queryAndTitle">
             <h1>Search</h1>
-            <input id = "searchInput" size=30 placeholder="Enter a song name, and start queuing!" v-model="query"/>&nbsp;
+            <input id = "searchInput" type=textarea resize=none size=30 placeholder="Enter a song name, and start queuing!" v-model="query"/>&nbsp;
             <h1>Results</h1>
             <h3 v-show = "searching" class = "statusMessage">Searching...</h3>
             <h3 v-show = "loadingResults" class = "statusMessage">Loading results...</h3>

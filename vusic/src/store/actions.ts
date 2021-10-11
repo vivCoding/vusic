@@ -4,6 +4,7 @@ export enum QUEUE {
     MOVE_SONG_UP = 'moveSongUp',
     MOVE_SONG_DOWN = 'moveSongDown',
     CHANGE_SONG_POSITION = 'changeSongPosition',
+    SAVE = 'saveQueue'
 }
 
 export enum SONG {

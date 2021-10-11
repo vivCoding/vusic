@@ -1,20 +1,23 @@
 import { QueuedSong, Song } from '@/types/song'
 import { QueuedSongPayload, SongPayload } from '@/types/store'
 import { InjectionKey } from '@vue/runtime-core'
-import { createStore, Store, useStore as baseUseStore } from 'vuex'
+import { ActionContext, createStore, Store, useStore as baseUseStore } from 'vuex'
 import { QUEUE, SONG } from './actions'
 
 export interface StoreStateType {
     currentSong?: QueuedSong,
     queue: QueuedSong[],
-    nextqueueId: number
+    nextqueueId: number,
+    queueShared: boolean
 }
 
 export default createStore<StoreStateType>({
     state: {
         queue: JSON.parse(`[{"videoId":"WwnZeQiI6hQ","title":"The Old Man and the Sea","thumbnail":"https://i.ytimg.com/vi/WwnZeQiI6hQ/default.jpg", "queueId": 0},{"videoId":"F64yFFnZfkI","title":"ヨルシカ - 言って。(Music Video)","thumbnail":"https://i.ytimg.com/vi/F64yFFnZfkI/default.jpg", "queueId": 1},{"videoId":"F90Cw4l-8NY","title":"Bastille - Pompeii (Official Music Video)","thumbnail":"https://i.ytimg.com/vi/F90Cw4l-8NY/default.jpg", "queueId": 2},{"videoId":"08AUS7lfXCU","title":"Bastille - Distorted Light Beam (Official Video)","thumbnail":"https://i.ytimg.com/vi/08AUS7lfXCU/default.jpg", "queueId": 3}]`),
+        // queue: [],
         currentSong: undefined,
-        nextqueueId: 0
+        nextqueueId: 0,
+        queueShared: false
     },
     mutations: {
         [QUEUE.ADD_SONG] (state: StoreStateType, payload: SongPayload): void {
@@ -27,6 +30,9 @@ export default createStore<StoreStateType>({
                 ...payload.song,
                 queueId: state.nextqueueId
             })
+            if (state.queue.length == 1) {
+                state.currentSong = state.queue[0]
+            }
         },
         
         [QUEUE.REMOVE_SONG] (state: StoreStateType, payload: QueuedSongPayload): void {
@@ -53,8 +59,8 @@ export default createStore<StoreStateType>({
             }
         },
 
-        [SONG.SET_CURRENT] (state: StoreStateType, payload: QueuedSongPayload): void {
-            state.currentSong = payload.song
+        [SONG.SET_CURRENT] (state: StoreStateType, payload: QueuedSongPayload | undefined): void {
+            state.currentSong = payload?.song ?? undefined
         },
 
         [SONG.NEXT] (state: StoreStateType): void {
@@ -66,9 +72,17 @@ export default createStore<StoreStateType>({
             const songIndex = state.currentSong ? state.queue.indexOf(state.currentSong) : state.queue.length
             state.currentSong = songIndex == 0 ? undefined : state.queue[songIndex - 1]
 
+        },
+
+        shareQueue (state: StoreStateType): void {
+            state.queueShared = true
         }
     },
     actions: {
+        [QUEUE.SAVE] (context: ActionContext<StoreStateType, StoreStateType>) {
+            context.commit("shareQueue")
+            
+        }
     },
     modules: {
     }

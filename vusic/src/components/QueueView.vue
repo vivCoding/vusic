@@ -3,6 +3,7 @@
         <h1>Song Queue</h1>
         <div id="queueList">
             <h2 v-show="queue.length == 0">No songs in queue right now!</h2>
+            <h2 v-show="queue.length == 0">Search for songs to start queueing.</h2>
             <song-view v-for="song in queue" :key="song.videoId" :song="song" :queued="true"/>
         </div>
     </div>

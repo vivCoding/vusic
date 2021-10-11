@@ -35,6 +35,7 @@ import { computed, defineComponent, ref, watch } from 'vue'
 // TODO: fix typing for howler.js https://github.com/goldfire/howler.js
 import { SONG } from '@/store/actions'
 import { Howl } from 'howler'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
     setup() {
@@ -163,6 +164,15 @@ export default defineComponent({
             let sec = Math.floor(time - min * 60);
             return (min % 10 == min ? "0" + min : min) + ":" + (sec % 10 == sec ? "0" + sec : sec)
         }
+
+        const route = useRoute()
+        watch(
+            () => route.path,
+            () => {
+                stopAudio()
+                store.commit(SONG.SET_CURRENT, undefined)
+            }
+        )
 
         return {
             currentSong, loadingSong, audioPlaying, currentTime, duration,
