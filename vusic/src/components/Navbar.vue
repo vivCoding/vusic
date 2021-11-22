@@ -6,7 +6,10 @@
             <h3 id = "subtitle">A Fast and Easy-to-Use Music Queuer</h3>
         </div>
         <div id = "sharingDiv">
-            <button v-show="!shared" @click="shareQueue">Share Queue</button>
+            <button v-show="!saved && !saving" @click="saveQueue">Save Queue</button>
+            <h2 v-show="saving && !saved">Saving...</h2>
+            <h2 v-show="!saving && saved">Your Playlist ID is: abcdefg</h2>
+            <button @click="shareQueue">Share Queue</button>
         </div>
     </div>
 </template>
@@ -16,19 +19,25 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
     setup() {
-        const shared = ref(false)
+        const saved = ref(false)
+        const saving = ref(false)
+
+        const saveQueue = () => {
+            saved.value = true
+            saving.value = true
+        }
 
         const shareQueue = () => {
-            shared.value = true
+            saved.value = false
+            return
         }
 
         return {
-            shared, shareQueue
+            saved, saving, saveQueue, shareQueue
         }
     },
 })
 </script>
-
 
 <style scoped>
 #navbar {
@@ -59,6 +68,7 @@ export default defineComponent({
 }
 
 #sharingDiv button {
+    margin-left: 1.5em;
     background-color: rgb(0, 153, 255);
     color: white;
     border: none;
@@ -72,5 +82,9 @@ export default defineComponent({
 
 #sharingDiv button:hover {
     opacity: 0.7;
+}
+
+#sharingDiv h2 {
+    display: inline-block;
 }
 </style>

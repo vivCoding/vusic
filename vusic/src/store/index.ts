@@ -1,4 +1,4 @@
-import { QueuedSong, Song } from '@/types/song'
+import { QueuedSong } from '@/types/song'
 import { QueuedSongPayload, SongPayload } from '@/types/store'
 import { InjectionKey } from '@vue/runtime-core'
 import { ActionContext, createStore, Store, useStore as baseUseStore } from 'vuex'

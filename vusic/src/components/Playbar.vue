@@ -12,7 +12,8 @@
             <h2 class = "timeLabel">{{ convertToMin(duration) }}</h2>
         </div>
         <h2 v-show="loadingSong">Loading song...</h2>
-        <div id = "controls" v-show="!loadingSong">
+        <h2 v-show="error">Uh oh, something went wrong! Try again later</h2>
+        <div id = "controls" v-show="!loadingSong && !error">
             <!-- loop current song -->
             <img class = "imgButton" :class = "{ buttonEnabled: audioLooping }" @click = "toggleLooping" src = "../assets/loop-white-18dp/2x/baseline_loop_white_18dp.png"/>
             <!-- previous song button -->
@@ -44,6 +45,7 @@ export default defineComponent({
 
         let howler: any = undefined
         const loadingSong = ref(false)
+        const error = ref(false)
         const audioPlaying = ref(false)
 
         let pausedSeek = 0
@@ -63,6 +65,7 @@ export default defineComponent({
             stopAudio()
             if (currentSong.value?.videoId) {
                 console.log(`${process.env.VUE_APP_API_URL}/playaudio?videoId=${currentSong.value.videoId}`)
+                error.value = false
                 loadingSong.value = true
                 audioPlaying.value = false
                 howler = new Howl({
@@ -74,7 +77,17 @@ export default defineComponent({
                         duration.value = howler.duration()
                         startUpdateCurrentTime()
                     },
-                    // TODO: onloaderror
+                    // TODO: fix onloaderror
+                    // onloaderror: () => {
+                    //     if (!loadingSuccess.value) {
+                    //         console.log('bad')
+                    //     }
+                    // },
+                    onplayerror: () => {
+                        console.log('cant play song!')
+                        error.value = true
+                        loadingSong.value = false
+                    },
                     onend: () => {
                         if (!audioLooping.value) {
                             audioPlaying.value = false
@@ -83,12 +96,13 @@ export default defineComponent({
                         } else {
                             playAudio()
                         }
-                    }
+                    },
                 })
                 howler.play()
             } else {
                 cancelUpdateCurrentTime()
                 console.log('cant play song!')
+                loadingSong.value = false
             }
         }
 
@@ -175,7 +189,7 @@ export default defineComponent({
         )
 
         return {
-            currentSong, loadingSong, audioPlaying, currentTime, duration,
+            currentSong, loadingSong, error, audioPlaying, currentTime, duration,
             playAudio, stopAudio, pauseAudio, resumeAudio, seekAudio,
             playNext, playPrevious, convertToMin,
             audioMuted, toggleMute, audioLooping, toggleLooping

@@ -1,18 +1,12 @@
 const { google } = require("googleapis")
-const ytdl = require("ytdl-core")
 
-// youtube init
 const youtube = google.youtube({
     version: "v3",
-    auth: process.env.AUTH
+    auth: process.env.YOUTUBE_API_AUTH
 })
-const options = {
-    quality: "lowest", 
-    audioFormat: "mp3"
-}
 
-const searchVideos = async query => {
-    console.log("- received search query for", query)
+const search = async (query) => {
+    console.log(`- received search query for "${query}"`)
     const results = await youtube.search.list({
         part: "id, snippet",
         q: query,
@@ -44,19 +38,4 @@ const searchVideos = async query => {
     return results
 }
 
-const getAudio = videoId => {
-    console.log("- getting audio for", videoId)
-    try {
-        return {
-            status: 200, 
-            audio: ytdl(`https://www.youtube.com/watch?v=${videoId}`, options)
-        }
-    } catch (exception) {
-        return { status: 500 }
-    }
-}
-
-module.exports = {
-    searchVideos: searchVideos,
-    getAudio: getAudio
-}
+module.exports = { search }
