@@ -1,7 +1,7 @@
-const { getAudio } = require("../youtube")
+const { getAudio } = require("../../youtube")
 
 const playAudioRoute = (req, res) => {
-    let videoId = req.query.videoId
+    const videoId = req.query.videoId
     const audio = getAudio(videoId)
     if (audio.status == 200) {
         audio.audio.pipe(res)
@@ -10,4 +10,4 @@ const playAudioRoute = (req, res) => {
     }
 }
 
-module.exports = { playAudioRoute }
+module.exports = playAudioRoute

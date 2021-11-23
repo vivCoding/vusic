@@ -8,7 +8,8 @@ export interface StoreStateType {
     currentSong?: QueuedSong,
     queue: QueuedSong[],
     nextqueueId: number,
-    queueShared: boolean
+    queueShared: boolean,
+    playlistId?: number,
 }
 
 export default createStore<StoreStateType>({
@@ -17,7 +18,8 @@ export default createStore<StoreStateType>({
         // queue: [],
         currentSong: undefined,
         nextqueueId: 0,
-        queueShared: false
+        queueShared: false,
+        playlistId: undefined,
     },
     mutations: {
         [QUEUE.ADD_SONG] (state: StoreStateType, payload: SongPayload): void {

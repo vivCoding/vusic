@@ -5,7 +5,7 @@ const youtube = google.youtube({
     auth: process.env.YOUTUBE_API_AUTH
 })
 
-const search = async (query) => {
+const searchVideos = async (query) => {
     console.log(`- received search query for "${query}"`)
     const results = await youtube.search.list({
         part: "id, snippet",
@@ -38,4 +38,34 @@ const search = async (query) => {
     return results
 }
 
-module.exports = { search }
+const searchVideosByIds = async(videoIds) => {
+    console.log(`- received search queries for "${videoIds}"`)
+    const results = await youtube.videos.list({
+        part: 'id, snippet',
+        id: videoIds.join(',')
+    }).then(response => {
+        if (response.status == 200) {
+            const items = []
+            response.data.items.forEach(item => {
+                items.push({
+                    videoId: item.id,
+                    title: item.snippet.title,
+                    thumbnail: item.snippet.thumbnails.default.url
+                })
+            })
+            return {
+                status: 200,
+                results: items
+            }
+        } else {
+            console.log("youtube error")
+            return { status: 500 }
+        }
+    }).catch(error => {
+        console.log(error)
+        return { status: 400 }
+    })
+    return results
+}
+
+module.exports = { searchVideos, searchVideosByIds }

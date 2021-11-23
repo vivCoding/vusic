@@ -1,4 +1,4 @@
-import { Song } from "./song";
+import { Playlist, Song } from "./song";
 
 export interface APIResult {
     success: boolean,
@@ -7,4 +7,12 @@ export interface APIResult {
 
 export interface SongAPIResult extends APIResult {
     data?: Song[]
+}
+
+export interface PlaylistAPIResult extends APIResult {
+    data?: Playlist
+}
+
+export interface SaveAPIResult extends APIResult {
+    data?: number
 }

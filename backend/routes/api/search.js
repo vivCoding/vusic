@@ -1,4 +1,4 @@
-const { searchVideos } = require("../youtube")
+const { searchVideos } = require("../../youtube")
 
 const searchRoute = async (req, res) => {
     let query = req.query.query
@@ -10,4 +10,4 @@ const searchRoute = async (req, res) => {
     }
 }
 
-module.exports = { searchRoute }
+module.exports = searchRoute

@@ -18,4 +18,4 @@ const connection = () => {
     })
 }
 
-module.exports = { connectDb: connection }
+module.exports = connection

@@ -7,3 +7,8 @@ export interface Song {
 export interface QueuedSong extends Song {
     queueId: number
 }
+
+export interface Playlist {
+    _id: String,
+    songs: Song[]
+}
