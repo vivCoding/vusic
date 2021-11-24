@@ -8,8 +8,8 @@
         <div id = "sharingDiv">
             <h2 v-show="!saving && playlistId">Your Playlist ID is: {{ playlistId }}</h2>
             <h2 v-show="saving">Saving...</h2>
-            <button v-show="!saving" @click="saveQueue">Save Queue</button>
             <button v-show="playlistId" @click="shareQueue">Share</button>
+            <button v-show="!saving" @click="saveQueue">Save Queue</button>
         </div>
     </div>
 </template>
