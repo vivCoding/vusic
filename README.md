@@ -7,10 +7,10 @@ Use it [here](https://vusicmusic.herokuapp.com/)!
 ## Features
 
 ### Search and queue all your favorite songs
-![](https://github.com/vivCoding/vusic/main/demo/searchQueue.gif)
+![](https://github.com/vivCoding/vusic/blob/main/demo/searchQueue.gif)
 
 ## Save and share your playlists
-![](https://github.com/vivCoding/vusic/main/demo/saveShare.gif)
+![](https://github.com/vivCoding/vusic/blob/main/demo/saveShare.gif)
 
 
 ### About
