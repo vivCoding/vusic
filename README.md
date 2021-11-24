@@ -13,5 +13,5 @@ Use it [here](https://vusicmusic.herokuapp.com/)!
 ![](https://github.com/vivCoding/vusic/blob/main/demo/saveShare.gif)
 
 
-### About
+## About
 This project was originally for [BoilerMake VIII Hackathon](https://devpost.com/software/vusic-a3247j). I decided to remake it to fix multiple bugs and have stable features. Though, if you do find bugs while using it, do post an issue, and feel free to contribute!
