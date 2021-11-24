@@ -14,7 +14,7 @@ import SearchView from './SearchView.vue'
 export default {
     components: {
         QueueView, SearchView, Playbar
-    }
+    },
 }
 </script>
 

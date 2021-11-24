@@ -1,15 +1,21 @@
-import { QueuedSong } from '@/types/song'
-import { QueuedSongPayload, SongPayload } from '@/types/store'
+import { getPlaylist, savePlaylist } from '@/api'
+import { Playlist, QueuedSong, Song } from '@/types/song'
+import { PlaylistPayload, QueuedSongPayload, SongPayload } from '@/types/store'
 import { InjectionKey } from '@vue/runtime-core'
 import { ActionContext, createStore, Store, useStore as baseUseStore } from 'vuex'
-import { QUEUE, SONG } from './actions'
+import { NET, PLAYLIST, QUEUE, SONG } from './actions'
 
 export interface StoreStateType {
     currentSong?: QueuedSong,
     queue: QueuedSong[],
     nextqueueId: number,
-    queueShared: boolean,
-    playlistId?: number,
+    playlistId?: string,
+    net: {
+        fetching: boolean,
+        fetchError: boolean,
+        saving: boolean,
+        saveError: boolean,
+    }
 }
 
 export default createStore<StoreStateType>({
@@ -18,8 +24,13 @@ export default createStore<StoreStateType>({
         // queue: [],
         currentSong: undefined,
         nextqueueId: 0,
-        queueShared: false,
         playlistId: undefined,
+        net: {
+            fetching: false,
+            fetchError: false,
+            saveError: false,
+            saving: false
+        }
     },
     mutations: {
         [QUEUE.ADD_SONG] (state: StoreStateType, payload: SongPayload): void {
@@ -73,21 +84,83 @@ export default createStore<StoreStateType>({
         [SONG.PREVIOUS] (state: StoreStateType): void {
             const songIndex = state.currentSong ? state.queue.indexOf(state.currentSong) : state.queue.length
             state.currentSong = songIndex == 0 ? undefined : state.queue[songIndex - 1]
-
         },
 
-        shareQueue (state: StoreStateType): void {
-            state.queueShared = true
-        }
+        [NET.SET_FETCHING] (state: StoreStateType): void {
+            state.net.fetching = true
+            state.net.fetchError = false
+        },
+
+        [NET.FETCH_SUCCESS] (state: StoreStateType): void {
+            state.net.fetching = false
+            state.net.fetchError = false
+        },
+
+        [NET.FETCH_ERROR] (state: StoreStateType): void {
+            state.net.fetchError = true
+            state.net.fetching = true
+        },
+
+        [NET.SET_SAVING] (state: StoreStateType): void {
+            state.net.saving = true
+            state.net.saveError = false
+        },
+
+        [NET.SAVE_SUCCESS] (state: StoreStateType): void {
+            state.net.saveError = false
+            state.net.saving = false
+        },
+
+        [NET.SAVE_ERROR] (state: StoreStateType): void {
+            state.net.saveError = true
+            state.net.saving = false
+        },
+
+        setPlaylistId (state: StoreStateType, payload: string): void {
+            state.playlistId = payload
+        },
+
+        setQueue (state: StoreStateType, payload: Song[]): void {
+            state.net.fetchError = false
+            state.queue = []
+            payload.forEach((song, index) => {
+                state.queue.push({
+                    queueId: index,
+                    ...song
+                })
+            })
+        },
     },
     actions: {
-        [QUEUE.SAVE] (context: ActionContext<StoreStateType, StoreStateType>) {
-            context.commit("shareQueue")
-            
+        [PLAYLIST.SAVE] ({ commit, state}: ActionContext<StoreStateType, StoreStateType>) {
+            console.log('saving playlist')
+            commit(NET.SET_SAVING)
+            savePlaylist({ _id: state.playlistId, songs: state.queue }).then(data => {
+                if (data.success) {
+                    commit(NET.SAVE_SUCCESS)
+                    commit('setPlaylistId', data.data)
+                    alert('Saved playlist! Your playlist ID is' + data.data)
+                } else {
+                    commit(NET.SAVE_ERROR)
+                    alert('Oopsies! Something went wrong in saving. Try again later!')
+                }
+            })
+        },
+
+        [PLAYLIST.GET] ({ commit }: ActionContext<StoreStateType, StoreStateType>, payload: PlaylistPayload) {
+            commit(NET.SET_FETCHING)
+            getPlaylist(payload.playlistId).then(data => {
+                if (data.success) {
+                    commit(NET.FETCH_SUCCESS)
+                    commit('setQueue', data.data?.songs)
+                    commit('setPlaylistId', data.data?._id)
+                } else {
+                    commit(NET.FETCH_ERROR)
+                }
+            })
         }
     },
-    modules: {
-    }
+    modules: {}
 })
 
 export const key: InjectionKey<Store<StoreStateType>> = Symbol()

@@ -35,6 +35,7 @@ export default defineComponent({
 
         const handleSearch = () => {
             searching.value = false
+            error.value = false
             if (query.value != '') {
                 loadingResults.value = true
                 searchSongs(query.value).then(result => {
@@ -42,6 +43,10 @@ export default defineComponent({
                         results.value = result.data
                         loadingResults.value = false
                     }
+                }).catch(() => {
+                    error.value = true
+                    results.value = []
+                    loadingResults.value = false
                 })
             }
         }
@@ -49,6 +54,7 @@ export default defineComponent({
         let searchingTimeout = 0
         watch(query, () => {
             searching.value = true
+            error.value = false
             clearTimeout(searchingTimeout)
             searchingTimeout = setTimeout(handleSearch, 1250)
         })

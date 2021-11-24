@@ -6,34 +6,51 @@
             <h3 id = "subtitle">A Fast and Easy-to-Use Music Queuer</h3>
         </div>
         <div id = "sharingDiv">
-            <button v-show="!saved && !saving" @click="saveQueue">Save Queue</button>
-            <h2 v-show="saving && !saved">Saving...</h2>
-            <h2 v-show="!saving && saved">Your Playlist ID is: abcdefg</h2>
-            <button @click="shareQueue">Share Queue</button>
+            <h2 v-show="!saving && playlistId">Your Playlist ID is: {{ playlistId }}</h2>
+            <h2 v-show="saving">Saving...</h2>
+            <button v-show="!saving" @click="saveQueue">Save Queue</button>
+            <button v-show="playlistId" @click="shareQueue">Share</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { useStore } from '@/store'
+import { PLAYLIST } from '@/store/actions'
+import { defineComponent, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
     setup() {
-        const saved = ref(false)
-        const saving = ref(false)
+        const store = useStore()
+        const route = useRoute()
+        const playlistId = ref()
 
-        const saveQueue = () => {
-            saved.value = true
-            saving.value = true
-        }
+        watch (
+            () => store.state.playlistId,
+            newPlaylistId => playlistId.value = newPlaylistId
+        )
+
+        const saving = ref(false)
+        const saveQueue = () => store.dispatch(PLAYLIST.SAVE)
+
+        watch (
+            () => store.state.net.saving,
+            newSaving => saving.value = newSaving
+        )
 
         const shareQueue = () => {
-            saved.value = false
-            return
+            let url = window.location.href
+            if (!route.params.playlistId) {
+                url += `${playlistId.value}`
+            }
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Copied song queue and playlist URL to clipboard!')
+            })
         }
 
         return {
-            saved, saving, saveQueue, shareQueue
+            saving, saveQueue, shareQueue, playlistId
         }
     },
 })
@@ -85,6 +102,6 @@ export default defineComponent({
 }
 
 #sharingDiv h2 {
-    display: inline-block;
+    display: inline;
 }
 </style>

@@ -7,3 +7,7 @@ export interface SongPayload {
 export interface QueuedSongPayload {
     song: QueuedSong
 }
+
+export interface PlaylistPayload {
+    playlistId: string,
+}

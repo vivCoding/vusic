@@ -9,6 +9,6 @@ export interface QueuedSong extends Song {
 }
 
 export interface Playlist {
-    _id: String,
+    _id?: string,
     songs: Song[]
 }

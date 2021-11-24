@@ -11,6 +11,7 @@ const playlistSchema = new mongoose.Schema(
     {
         songs: [
             {
+                _id: false,
                 videoId: String,
                 title: String,
                 thumbnail: String
