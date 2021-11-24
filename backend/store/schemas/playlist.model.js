@@ -1,7 +1,5 @@
 const mongoose = require('mongoose')
 
-
-
 const options = {
     discriminationKey: 'playlist',
     collection: process.env.NODE_ENV === 'dev' ? 'dev-playlists' : 'playlists'

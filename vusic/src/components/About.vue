@@ -18,6 +18,7 @@
     padding: 2em;
     text-align: center;
     font-size: 150%;
+    min-height: 75vh;
 }
 
 a {

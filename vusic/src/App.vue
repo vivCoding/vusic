@@ -8,8 +8,8 @@
 import { defineComponent, watch } from 'vue';
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
-import { useRoute } from 'vue-router';
-import store from './store';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from './store';
 import { PLAYLIST } from './store/actions';
 import { PlaylistPayload } from './types/store';
 
@@ -19,7 +19,9 @@ export default defineComponent({
         Navbar, Footer
     },
     setup() {
+        const store = useStore()
         const route = useRoute()
+        const router = useRouter()
 
         watch(
             () => route.params.playlistId,
@@ -27,6 +29,15 @@ export default defineComponent({
                 store.dispatch(PLAYLIST.GET, {
                     playlistId: newPlaylistId
                 } as PlaylistPayload)
+            }
+        )
+
+        watch(
+            () => store.state.net.fetchError,
+            fetchError => {
+                if (fetchError) {
+                    router.push('/error')
+                }
             }
         )
     }

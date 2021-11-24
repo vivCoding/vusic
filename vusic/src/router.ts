@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Main from './components/Main.vue'
 import About from './components/About.vue'
-import Footer from './components/Footer.vue'
+import Error from './components/404.vue'
 
 const routes: RouteRecordRaw[] = [
     {
@@ -15,6 +15,14 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/about',
         component: About
+    },
+    {
+        path: '/error',
+        component: Error
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: Error
     },
 ]
 

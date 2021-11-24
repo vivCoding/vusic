@@ -1,5 +1,5 @@
 import { getPlaylist, savePlaylist } from '@/api'
-import { Playlist, QueuedSong, Song } from '@/types/song'
+import { QueuedSong, Song } from '@/types/song'
 import { PlaylistPayload, QueuedSongPayload, SongPayload } from '@/types/store'
 import { InjectionKey } from '@vue/runtime-core'
 import { ActionContext, createStore, Store, useStore as baseUseStore } from 'vuex'
@@ -20,8 +20,8 @@ export interface StoreStateType {
 
 export default createStore<StoreStateType>({
     state: {
-        queue: JSON.parse(`[{"videoId":"WwnZeQiI6hQ","title":"The Old Man and the Sea","thumbnail":"https://i.ytimg.com/vi/WwnZeQiI6hQ/default.jpg", "queueId": 0},{"videoId":"F64yFFnZfkI","title":"ヨルシカ - 言って。(Music Video)","thumbnail":"https://i.ytimg.com/vi/F64yFFnZfkI/default.jpg", "queueId": 1},{"videoId":"F90Cw4l-8NY","title":"Bastille - Pompeii (Official Music Video)","thumbnail":"https://i.ytimg.com/vi/F90Cw4l-8NY/default.jpg", "queueId": 2},{"videoId":"08AUS7lfXCU","title":"Bastille - Distorted Light Beam (Official Video)","thumbnail":"https://i.ytimg.com/vi/08AUS7lfXCU/default.jpg", "queueId": 3}]`),
-        // queue: [],
+        // queue: JSON.parse(`[{"videoId":"WwnZeQiI6hQ","title":"The Old Man and the Sea","thumbnail":"https://i.ytimg.com/vi/WwnZeQiI6hQ/default.jpg", "queueId": 0},{"videoId":"F64yFFnZfkI","title":"ヨルシカ - 言って。(Music Video)","thumbnail":"https://i.ytimg.com/vi/F64yFFnZfkI/default.jpg", "queueId": 1},{"videoId":"F90Cw4l-8NY","title":"Bastille - Pompeii (Official Music Video)","thumbnail":"https://i.ytimg.com/vi/F90Cw4l-8NY/default.jpg", "queueId": 2},{"videoId":"08AUS7lfXCU","title":"Bastille - Distorted Light Beam (Official Video)","thumbnail":"https://i.ytimg.com/vi/08AUS7lfXCU/default.jpg", "queueId": 3}]`),
+        queue: [],
         currentSong: undefined,
         nextqueueId: 0,
         playlistId: undefined,

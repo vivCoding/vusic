@@ -1,6 +1,5 @@
 <template>
     <div id = "playbarContainer">
-        <!-- <p>Current: {{ currentSong?.title }}</p> -->
         <div id = "audioTimeline">
             <h2 class = "timeLabel">{{ convertToMin(currentTime) }}</h2>
             <input id = "audioSlider" type = "range"
